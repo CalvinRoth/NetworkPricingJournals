@@ -21,7 +21,7 @@ def centralty(A: np.matrix, rho: float) -> np.matrix:
     """
     n = A.shape[0]
     ident = np.eye(n, n)
-    ones = np.ones((n, 1))
+    ones = np.ones((n, ))
     ApA = A + A.T
     central = lin.inv(ident - (rho * ApA))
     central = central @ ones  
@@ -31,7 +31,7 @@ def price_vector(a, c, rho, G):
     n = len(G)
     frac1 = (a+c)/2
     frac2 = rho * ( (a-c)/2)
-    return (frac1 * np.ones((n,1))) + (frac2 * (G - G.T) @ centralty(G, rho))
+    return (frac1 * np.ones((n,))) + (frac2 * (G - G.T) @ centralty(G, rho))
  
 
 def consumption(n, rho, a, c, G):
@@ -43,11 +43,11 @@ def consumption(n, rho, a, c, G):
 
 def optProfit(G, rho, a, c):
     n = len(G)
-    price = price_vector(a, c, discount, G)
+    price = price_vector(a, c, rho, G)
     consu = lin.inv(np.eye(n,n) - 2*rho*G)
-    consu = 0.5 * consu @ (a * np.ones((n,1)) - price)
-    profit = (price - c*np.ones((n,1))).T @ consu
-    return profit[0,0]
+    consu = 0.5 * consu @ (a * np.ones((n,)) - price)
+    profit = (price - c*np.ones((n,))).T @ consu
+    return profit
  
 def computeProfit(G, v, rho, a, c):
     """Profit in the graph G using prices v
@@ -64,9 +64,9 @@ def computeProfit(G, v, rho, a, c):
     """
     n = len(G)
     consu = lin.inv(np.eye(n,n) - 2*rho*G)
-    consu = 0.5 * consu @ (a * np.ones((n,1)) - v)
-    profit = (v - c*np.ones((n,1))).T @ consu
-    return profit[0,0]
+    consu = 0.5 * consu @ (a * np.ones((n,)) - v)
+    profit = (v - c*np.ones((n,))).T @ consu
+    return profit
 
 
 ## From itertools, but with modified initial args 
